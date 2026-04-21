@@ -1,0 +1,52 @@
+"""
+Configuration file for the translation system.
+"""
+
+# Model cache directory (optional)
+MODEL_CACHE_DIR: null  # Use default Hugging Face cache
+
+# Default device: 'cpu', 'cuda', or 'mps'
+DEFAULT_DEVICE: 'cpu'  # Auto-detect if null
+
+# Translation settings
+TRANSLATION:
+  batch_size: 32
+  max_length: 512
+  num_beams: 4
+  early_stopping: true
+
+# Supported language codes
+SUPPORTED_LANGUAGES:
+  - en  # English
+  - fr  # French
+  - de  # German
+  - es  # Spanish
+  - it  # Italian
+  - pt  # Portuguese
+  - ru  # Russian
+  - ja  # Japanese
+  - zh  # Chinese
+
+# Logging configuration
+LOGGING:
+  level: INFO
+  format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+
+# API server settings
+API:
+  host: '0.0.0.0'
+  port: 5000
+  debug: false
+  workers: 1
+
+# Performance settings
+PERFORMANCE:
+  enable_metrics: true
+  cache_models: true
+  gpu_memory_fraction: 0.9
+
+# Text processing
+TEXT_PROCESSING:
+  max_sentence_length: 500
+  min_text_length: 1
+  remove_extra_whitespace: true

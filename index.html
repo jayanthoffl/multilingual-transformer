@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Translator</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f3f4f6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; max-width: 500px; }
+        h2 { margin-top: 0; color: #111827; }
+        textarea { width: 100%; height: 100px; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; margin-bottom: 15px; resize: none; box-sizing: border-box; }
+        .controls { display: flex; gap: 10px; margin-bottom: 15px; }
+        select, button { padding: 10px; border-radius: 6px; border: 1px solid #d1d5db; }
+        select { flex: 1; }
+        button { background-color: #2563eb; color: white; border: none; cursor: pointer; font-weight: bold; flex: 1; transition: background 0.2s; }
+        button:hover { background-color: #1d4ed8; }
+        .result-box { background: #f9fafb; border: 1px solid #e5e7eb; padding: 15px; border-radius: 6px; min-height: 50px; color: #374151; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🌍 Multilingual Translator</h2>
+    
+    <textarea id="inputText" placeholder="Type text to translate..."></textarea>
+    
+    <div class="controls">
+        <select id="sourceLang">
+            <option value="en">English (en)</option>
+            <option value="fr">French (fr)</option>
+        </select>
+        <span>➡</span>
+        <select id="targetLang">
+            <option value="fr">French (fr)</option>
+            <option value="de">German (de)</option>
+            <option value="es">Spanish (es)</option>
+        </select>
+    </div>
+    
+    <button onclick="translateText()">Translate</button>
+
+    <h4 style="margin-bottom: 5px;">Translation:</h4>
+    <div id="output" class="result-box">Your translation will appear here...</div>
+</div>
+
+<script>
+    async function translateText() {
+        const text = document.getElementById('inputText').value;
+        const sourceLang = document.getElementById('sourceLang').value;
+        const targetLang = document.getElementById('targetLang').value;
+        const outputDiv = document.getElementById('output');
+
+        if (!text) {
+            outputDiv.innerHTML = "<em>Please enter some text.</em>";
+            return;
+        }
+
+        outputDiv.innerHTML = "<em>Translating... (might take a moment if downloading a new model)</em>";
+
+        try {
+            const response = await fetch('http://localhost:5000/translate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text, source_lang: sourceLang, target_lang: targetLang })
+            });
+
+            const data = await response.json();
+            
+            if (response.ok) {
+                outputDiv.innerText = data.translation;
+            } else {
+                outputDiv.innerHTML = `<span style="color: red;">Error: ${data.error}</span>`;
+            }
+        } catch (error) {
+            outputDiv.innerHTML = `<span style="color: red;">Failed to connect to server. Is server.py running?</span>`;
+        }
+    }
+</script>
+
+</body>
+</html>
